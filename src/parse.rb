@@ -45,6 +45,15 @@ def tm_transition_no_capture()
     '(?:\+|\-|\/)'
 end
 
+def tm_parse_array(str, type_re)
+  str.split(Regexp.new '(' + type_re + ')\s*,\s*')
+end
+
+# TODO: parse "'a' | 'a' -> zr +" into something
+def tm_parse_transition(str)
+  str
+end
+
 def tm_remove_comments(input)
   input.gsub(/(?<!\\)#.*/, '').gsub(/\\#/, '#')
 end
@@ -82,12 +91,19 @@ def parse_description(description)
       .split(Regexp.new '[\'"]([^\']+)[\'"](?:,\s*)?')
       .select { |str| str != "" }
   }
-  # TODO: parse "'a', 'b', 'c'" into an actual array
+
   aliases = aliases_re.match(description) { |match|
     Hash[*match.captures[0]
       .split(Regexp.new '\s*(' + ID + '):\s*' + tm_array(tm_string_no_capture()) + '(?:,\s*)?')
       .select { |str| str != "" }
     ]
+      .map { |k,v| [k, tm_parse_array(v, tm_string_no_capture())] }
+      .map { |k,v| [
+        k,
+        v
+          .filter { |str| str != '' }
+          .map    { |str| str.match(Regexp.new tm_string()).captures[1] }
+      ] }.to_h
   }
 
   transitions = transitions_re.match(description) { |match|
@@ -109,7 +125,9 @@ def parse_description(description)
       nxt = transitions_arr[index+1]
 
       if (nxt =~ Regexp.new(ID)) != 0 && nxt != nil
-        obj[cur] = nxt.split("\n").map { |x| x.strip }
+        obj[cur] = tm_parse_array(nxt, tm_transition_no_capture()) # nxt.split("\n").map { |x| x.strip }
+                    .filter { |str| str != '' }
+                    .map { |str| tm_parse_transition str }
         skip_next = true
       else
         obj[cur] = []
