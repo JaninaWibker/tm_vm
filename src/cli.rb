@@ -19,7 +19,7 @@ def parse_args(args)
     puts %{usage: ruby main.rb <optional flags> <input file>
 
 flags:
-  -o, --output    Specify the output format (tex, svg, react, default: svg)
+  -o, --output    Specify the output format (tex, svg, gif, react, default: svg)
   -v, --version   Print persion
 }
   exit 0
@@ -55,11 +55,11 @@ flags:
 
         if value == '--output'
           # next value should be the output format
-          if ['tex', 'svg', 'react'].include? args[index+1]
+          if ['tex', 'svg', 'gif', 'react'].include? args[index+1]
             options.output = args[index+1]
             skip_next = true
           else
-            puts "invalid option for '--output', supplied '#{args[index+1]}' but was expecting one of 'tex', 'svg' or 'react'"
+            puts "invalid option for '--output', supplied '#{args[index+1]}' but was expecting one of 'tex', 'svg', 'gif' or 'react'"
             exit 1
           end
         end
@@ -73,11 +73,11 @@ flags:
         end
 
         if value == '-o'
-          if ['tex', 'svg', 'react'].include? args[index+1]
+          if ['tex', 'svg', 'gif', 'react'].include? args[index+1]
             options.output = args[index+1]
             skip_next = true
           else
-            puts "invalid option for '-o', supplied '#{args[index+1]}' but was expecting one of 'tex', 'svg' or 'react'"
+            puts "invalid option for '-o', supplied '#{args[index+1]}' but was expecting one of 'tex', 'svg', 'gif' or 'react'"
             exit 1
           end
         end

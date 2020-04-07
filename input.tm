@@ -42,3 +42,12 @@ transitions = {
 input = ['a', 'b', '0', '1'] # each symbol is provided seperate (tokenizing is not part of this project)
 
 step 4
+
+% OPTIONS %
+
+# this place can be used to provide options in order to reduce the amount of command line flags
+# the options include:
+# - output format,
+# - duration (between state transitions for gif / react output)
+#
+# command line flags take precedence over the options in the file

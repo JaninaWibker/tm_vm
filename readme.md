@@ -4,7 +4,7 @@
 
 The idea is to make it easy to run **small** turing machines and visualize their state using tex.
 
-You supply the data required to describe a *TM* (turing machine) and it will be turned into a tex document. This document will require a large amount of clean-up in regards to positioning of nodes (states) and edges, but this file (after clean-up) can then be used as an input (along side the description of the TM) and be used to generate pretty output for each state transition. This output can be a tex document, an svg or even a React component.
+You supply the data required to describe a *TM* (turing machine) and it will be turned into a tex document. This document will require a large amount of clean-up in regards to positioning of nodes (states) and edges, but this file (after clean-up) can then be used as an input (along side the description of the TM) and be used to generate pretty output for each state transition. This output can be a tex document, an svg, a GIF or even a React component.
 
 ## Usage
 
@@ -12,7 +12,7 @@ You supply the data required to describe a *TM* (turing machine) and it will be 
 usage: ruby src/main.rb <optional flags> <input file>
 
 flags:
-  -o, --output    Specify the output format (tex, svg, react, default: svg)
+  -o, --output    Specify the output format (tex, svg, gif, react, default: svg)
   -v, --version   Print persion
 ```
 
