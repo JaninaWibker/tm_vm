@@ -13,7 +13,7 @@ usage: ruby src/main.rb <optional flags> <input file>
 
 flags:
   -o, --output    Specify the output format (tex, svg, gif, react, default: svg)
-  -v, --version   Print persion
+  -v, --version   Print version
 ```
 
 Check out the `input.tm` file for an example of how the tuing machine needs to be specified

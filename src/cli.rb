@@ -20,7 +20,7 @@ def parse_args(args)
 
 flags:
   -o, --output    Specify the output format (tex, svg, gif, react, default: svg)
-  -v, --version   Print persion
+  -v, --version   Print version
 }
   exit 0
   else
