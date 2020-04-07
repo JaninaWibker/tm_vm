@@ -1,4 +1,5 @@
 require './src/cli.rb'
+require './src/parse.rb'
 
 def main(args)
   options = parse_args(args)
@@ -7,6 +8,8 @@ def main(args)
     exit 1
   end
   puts options.inspect
+
+  puts parse_tm(File.read(options.filepath))
 end
 
 main(ARGV)

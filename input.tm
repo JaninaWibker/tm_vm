@@ -8,7 +8,7 @@ inputs = [
   'a', 'b', '0', '1' # blank symbol is implicit
 ]
 
-alias = {
+aliases = {
   x: ['a', 'b', 'c']
 }
 
