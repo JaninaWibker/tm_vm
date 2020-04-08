@@ -97,8 +97,8 @@ def tm_parse_transition(str)
 
     return {
       :from_symbol => from_symbol,
-      :to_symbol   => to_symbol,
       :from_id     => from_alias,
+      :to_symbol   => to_symbol,
       :to_id       => to_alias,
       :to_state    => to_state,
       :loop        => loop,
@@ -193,7 +193,6 @@ def parse_description(description)
   }
 
   # TODO: check that all referenced aliases actually exist and similar
-  # TODO: post processing of transitions (replacing loop with actual state, adding from_state maybe, replacing aliases (except blank maybe, will have to figure this out))
 
   return {
     :states  => states,
@@ -204,9 +203,27 @@ def parse_description(description)
 end
 
 def parse_execution(execution)
+
+  input_re = Regexp.new tm_assignment(
+    'input',
+    tm_array(tm_string())
+  )
+
+  step_re = /step\s+([0-9]+)/
+
+  input = input_re.match(execution) { |match|
+    match.captures[0]
+      .split(Regexp.new '[\'"]([^\']+)[\'"](?:,\s*)?')
+      .select { |str| str != "" }
+  }
+
+  step = step_re.match(execution) { |match|
+    match.captures[0].to_i
+  }
+
   return {
-    :input => [],
-    :steps => 0
+    :input => input,
+    :steps => step
   }
 end
 

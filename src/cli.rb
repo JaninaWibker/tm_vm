@@ -3,7 +3,7 @@ require './src/core_ext.rb'
 VERSION = 0.1
 
 class Options
-  attr_accessor :output, :filepath
+  attr_accessor :output, :filepath, :expand_aliases
 
   def initialize()
     @output = "tex"

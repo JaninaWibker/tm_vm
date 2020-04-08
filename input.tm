@@ -9,7 +9,7 @@ inputs = [
 ]
 
 aliases = {
-  x: ['a', 'b', 'c']
+  x: ['b', '0', '1']
 }
 
 transitions = {
