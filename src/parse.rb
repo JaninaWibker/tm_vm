@@ -49,10 +49,65 @@ def tm_parse_array(str, type_re)
   str.split(Regexp.new '(' + type_re + ')\s*,\s*')
 end
 
-# TODO: parse "'a' | 'a' -> zr +" into something
 def tm_parse_transition(str)
-  str
-end
+  transition_re = Regexp.new '(?:(' + ID + ')|(?:' + tm_string() + '))\s*\|\s*' +
+                             '(?:(' + ID + ')|(?:' + tm_string() + '))' +
+                             '(?:\s*(->)\s*(' + ID + ')\s*|\s*(<>)\s*)' +
+                             '(\+|\-|\/)'
+  str.match(transition_re) { |match|
+    from_id, from_dblquote, from_sglquote,
+      to_id, to_dblquote, to_sglquote,
+      r_arrow, to_state, d_arrow, dir = match.captures
+
+    from_quote = from_dblquote || from_sglquote
+    to_quote   = to_dblquote   || to_sglquote
+
+    from_symbol = nil
+    to_symbol   = nil
+    from_alias  = false
+    to_alias    = false
+    loop        = false
+    direction   = 0
+
+    if from_id == nil
+      from_symbol = from_quote
+    else
+      from_symbol = from_id
+      from_alias = true
+    end
+
+    if to_id == nil
+      to_symbol = to_quote
+    else
+      to_symbol = to_id
+      to_alias = true
+    end
+
+    if r_arrow == nil
+      loop = true
+    end
+
+    if dir== '+'
+      direction = 1
+    elsif dir== '-'
+      direction = -1
+    elsif dir== '/'
+      direction = 0
+    end
+
+    return {
+      :from_symbol => from_symbol,
+      :to_symbol   => to_symbol,
+      :from_id     => from_alias,
+      :to_id       => to_alias,
+      :to_state    => to_state,
+      :loop        => loop,
+      :direction   => direction
+    }
+
+  }
+
+  end
 
 def tm_remove_comments(input)
   input.gsub(/(?<!\\)#.*/, '').gsub(/\\#/, '#')
@@ -125,7 +180,7 @@ def parse_description(description)
       nxt = transitions_arr[index+1]
 
       if (nxt =~ Regexp.new(ID)) != 0 && nxt != nil
-        obj[cur] = tm_parse_array(nxt, tm_transition_no_capture()) # nxt.split("\n").map { |x| x.strip }
+        obj[cur] = tm_parse_array(nxt, tm_transition_no_capture())
                     .filter { |str| str != '' }
                     .map { |str| tm_parse_transition str }
         skip_next = true
@@ -137,9 +192,12 @@ def parse_description(description)
     obj
   }
 
+  # TODO: check that all referenced aliases actually exist and similar
+  # TODO: post processing of transitions (replacing loop with actual state, adding from_state maybe, replacing aliases (except blank maybe, will have to figure this out))
+
   return {
-    :states => states,
-    :inputs => inputs,
+    :states  => states,
+    :inputs  => inputs,
     :aliases => aliases,
     :transitions => transitions
   }
@@ -173,8 +231,8 @@ def parse_tm(input)
 
   return {
     :description => parse_description(sections['DESCRIPTION']),
-    :execution => parse_execution(sections['EXECUTION']),
-    :options => parse_options(sections['OPTIONS'])
+    :execution   => parse_execution(sections['EXECUTION']),
+    :options     => parse_options(sections['OPTIONS'])
   }
 end
 
