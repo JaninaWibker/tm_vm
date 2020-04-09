@@ -192,8 +192,6 @@ def parse_description(description)
     obj
   }
 
-  # TODO: check that all referenced aliases actually exist and similar
-
   return {
     :states  => states,
     :inputs  => inputs,

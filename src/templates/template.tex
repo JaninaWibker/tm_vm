@@ -1,9 +1,12 @@
 \documentclass{article}
 \usepackage{tikz}
-\uselibrary{amssyymb}
+\usepackage{amssymb}
+\begin{document}
 \usetikzlibrary{automata, positioning, arrows}
 \begin{figure}[ht]
 \centering
+
+  \newcommand{\TMVMINTERNAL}[1] {}
 
 \begin{tikzpicture}[>=latex', shorten >=1pt, auto,
                     node distance=2.5cm, scale=1,
@@ -14,6 +17,7 @@
   }
 
   %{STATES}%
+  \node[\TMVMINTERNAL{abc}, state] (abc) {$abc$};
 
   \path[->]
     %{EDGES}%

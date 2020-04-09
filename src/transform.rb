@@ -51,6 +51,7 @@ def transform_transition(states, symbols, aliases, full_aliases, k, t, options)
             :from_id     => false,
             :to_symbol   => s,
             :to_id       => false,
+            :from_state  => k,
             :to_state    => t[:to_state],
             :loop        => t[:loop],
             :direction   => t[:direction]
@@ -64,6 +65,7 @@ def transform_transition(states, symbols, aliases, full_aliases, k, t, options)
             :from_id     => false,
             :to_symbol   => t[:to_symbol],
             :to_id       => t[:to_id],
+            :from_state  => k,
             :to_state    => t[:to_state],
             :loop        => t[:loop],
             :direction   => t[:direction]
