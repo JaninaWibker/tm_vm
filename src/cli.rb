@@ -19,11 +19,12 @@ def parse_args(args)
     puts %{usage: ruby main.rb <optional flags> <input file>
 
 flags:
-  -o, --output    Specify the output format (tex, svg, gif, react, default: svg)
-  -t, --template  Specify the file that should be used as a template for the output
-  -e, --expand    Wether to expand aliases or not
-  -d, --duration  Duration between state transitions (ms)
-  -v, --version   Print version
+  -o, --output     Specify the output format (tex, svg, gif, react, default: svg)
+  -t, --template   Specify the file that should be used as a template for the output
+  -e, --expand     Expand aliases
+  -E, --no-expand  Don't expand aliases
+  -d, --duration   Duration between state transitions (ms)
+  -v, --version    Print version
 }
   exit 0
   else
@@ -88,7 +89,11 @@ flags:
         end
 
         if value == '--expand'
-          options.expand = true
+          options.expand_aliases = true
+        end
+
+        if value == '--no-expand'
+          options.expand_aliases = false
         end
         # place other options here
 
@@ -96,45 +101,53 @@ flags:
 
         # TODO: split args[index] up into 1 character wide strings in order to support "-et" and similar
 
-        if value == '-v'
-          puts "version #{VERSION}"
-          exit  0
-        end
+        for flag in value[1..-1].split("")
 
-        if value == '-o'
-          if ['tex', 'svg', 'gif', 'react'].include? args[index+1]
-            options.output = args[index+1]
-            skip_next = true
-          else
-            puts "invalid option for '-o', supplied '#{args[index+1]}' but was expecting one of 'tex', 'svg', 'gif' or 'react'"
-            exit 1
+          puts flag
+
+          if flag == 'v'
+            puts "version #{VERSION}"
+            exit  0
+          end
+
+          if flag == 'o'
+            if ['tex', 'svg', 'gif', 'react'].include? args[index+1]
+              options.output = args[index+1]
+              skip_next = true
+            else
+              puts "invalid option for '-o', supplied '#{args[index+1]}' but was expecting one of 'tex', 'svg', 'gif' or 'react'"
+              exit 1
+            end
+          end
+
+          if flag == 't'
+            # assume next arg is a filepath
+            if !args[index+1].start_with? '-'
+              options.template = args[index+1]
+              skip_next = true
+            else
+              puts "invalid option for '-t', supplied '#{args[index+1]}' but was expecting a filepath"
+              exit 1
+            end
+          end
+
+          if flag == 'd'
+            if (args[index+1] =~ /^[0-9]+$/) != nil
+              options.duration = args[index+1].to_i
+            else
+              puts "invalid option for '-d', supplied '#{args[index+1]}' but was expecting a number"
+              exit 1
+            end
+          end
+
+          if flag == 'e'
+            options.expand_aliases = true
+          end
+
+          if flag == 'E'
+            options.expand_aliases = false
           end
         end
-
-        if value == '-t'
-          # assume next arg is a filepath
-          if !args[index+1].start_with? '-'
-            options.template = args[index+1]
-            skip_next = true
-          else
-            puts "invalid option for '-t', supplied '#{args[index+1]}' but was expecting a filepath"
-            exit 1
-          end
-        end
-
-        if value == '-d'
-          if (args[index+1] =~ /^[0-9]+$/) != nil
-            options.duration = args[index+1].to_i
-          else
-            puts "invalid option for '-d', supplied '#{args[index+1]}' but was expecting a number"
-            exit 1
-          end
-        end
-
-        if value == '-e'
-          options.expand = true
-        end
-
 
       elsif index == args.size-1
         options.filepath = value
