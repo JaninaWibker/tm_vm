@@ -11,9 +11,6 @@ def main(args)
     exit 1
   end
 
-  # TODO: add expand_aliases option
-  options.expand_aliases = true
-
   puts options.inspect
 
   parsed = parse_tm(File.read(options.filepath))

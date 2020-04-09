@@ -3,14 +3,14 @@ require './src/core_ext.rb'
 VERSION = 0.1
 
 class Options
-  attr_accessor :output, :filepath, :expand_aliases
+  attr_accessor :output, :filepath, :template, :expand_aliases, :duration
 
   def initialize()
     @output = "tex"
+    @expand_aliases = true
+    @duration = 500
   end
 end
-
-
 
 def parse_args(args)
   options = Options.new()
@@ -20,6 +20,9 @@ def parse_args(args)
 
 flags:
   -o, --output    Specify the output format (tex, svg, gif, react, default: svg)
+  -t, --template  Specify the file that should be used as a template for the output
+  -e, --expand    Wether to expand aliases or not
+  -d, --duration  Duration between state transitions (ms)
   -v, --version   Print version
 }
   exit 0
@@ -63,9 +66,35 @@ flags:
             exit 1
           end
         end
+
+        if value == '--template'
+          # assume next arg is a filepath
+          if !args[index+1].start_with? '-'
+            options.template = args[index+1]
+            skip_next = true
+          else
+            puts "invalid option for '--template', supplied '#{args[index+1]}' but was expecting a filepath"
+            exit 1
+          end
+        end
+
+        if value == '--duration'
+          if (args[index+1] =~ /^[0-9]+$/) != nil
+            options.duration = args[index+1].to_i
+          else
+            puts "invalid option for '--duration', supplied '#{args[index+1]}' but was expecting a number"
+            exit 1
+          end
+        end
+
+        if value == '--expand'
+          options.expand = true
+        end
         # place other options here
 
       elsif value.start_with?('-')
+
+        # TODO: split args[index] up into 1 character wide strings in order to support "-et" and similar
 
         if value == '-v'
           puts "version #{VERSION}"
@@ -81,6 +110,31 @@ flags:
             exit 1
           end
         end
+
+        if value == '-t'
+          # assume next arg is a filepath
+          if !args[index+1].start_with? '-'
+            options.template = args[index+1]
+            skip_next = true
+          else
+            puts "invalid option for '-t', supplied '#{args[index+1]}' but was expecting a filepath"
+            exit 1
+          end
+        end
+
+        if value == '-d'
+          if (args[index+1] =~ /^[0-9]+$/) != nil
+            options.duration = args[index+1].to_i
+          else
+            puts "invalid option for '-d', supplied '#{args[index+1]}' but was expecting a number"
+            exit 1
+          end
+        end
+
+        if value == '-e'
+          options.expand = true
+        end
+
 
       elsif index == args.size-1
         options.filepath = value

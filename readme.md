@@ -8,11 +8,14 @@ You supply the data required to describe a *TM* (turing machine) and it will be 
 
 ## Usage
 
-```bash
+```
 usage: ruby src/main.rb <optional flags> <input file>
 
 flags:
   -o, --output    Specify the output format (tex, svg, gif, react, default: svg)
+  -t, --template  Specify the file that should be used as a template for the output
+  -e, --expand    Wether to expand aliases or not
+  -d, --duration  Duration between state transitions (ms)
   -v, --version   Print version
 ```
 
