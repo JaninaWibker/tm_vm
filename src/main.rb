@@ -3,6 +3,9 @@ require 'pp'
 require './src/cli.rb'
 require './src/parse.rb'
 require './src/transform.rb'
+require './src/generate_template.rb'
+require './src/run.rb'
+require './src/output.rb'
 
 def main(args)
   options = parse_args(args)
@@ -11,7 +14,7 @@ def main(args)
     exit 1
   end
 
-  puts options.inspect
+  puts "options: " + options.inspect
 
   parsed = parse_tm(File.read(options.filepath))
 
@@ -20,6 +23,20 @@ def main(args)
   parsed[:description] = transform(parsed[:description], options)
 
   pp parsed
+
+  if options.template != nil
+    output_begin(parsed, options)
+    run(parsed) do |parsed, state|
+      output_stream(parsed, options, state)
+    end
+    output_end(parsed, options)
+  else
+    File.write(
+      options.filepath + '.tex',
+      generate_template(parsed[:description], options)
+    )
+  end
+
 end
 
 main(ARGV)

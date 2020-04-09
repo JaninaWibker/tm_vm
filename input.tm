@@ -1,8 +1,10 @@
 % DESCRIPTION %
 
 states = [
-  z0 $z_0$, z1 $z_1$, zr $z_r$, zrr $z_'r$, f $f$
+  z0 $z_0$, z1 $z_1$, zr $z_r$, zrr $z'_r$, f $f$
 ]
+
+start = z0
 
 inputs = [
   'a', 'b', '0', '1' # blank symbol is implicit

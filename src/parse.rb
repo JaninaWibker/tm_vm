@@ -134,6 +134,11 @@ def parse_description(description)
     tm_object(tm_array(tm_transition_no_capture()))
   )
 
+  start_re = Regexp.new tm_assignment(
+    'start',
+    '(' + ID + ')'
+  )
+
   states = states_re.match(description) { |match|
     Hash[*match.captures[0]
       .split(Regexp.new '\s*(' + ID + ')\s*\$([^\$]+)\$(?:,\s*)?')
@@ -192,8 +197,11 @@ def parse_description(description)
     obj
   }
 
+  start = start_re.match(description).captures[0]
+
   return {
     :states  => states,
+    :start   => start,
     :inputs  => inputs,
     :aliases => aliases,
     :transitions => transitions

@@ -6,7 +6,11 @@
 \begin{figure}[ht]
 \centering
 
-  \newcommand{\TMVMINTERNAL}[1] {}
+\newcommand{\TMVMINTERNALNODE}[1] {% TM_VM_REPLACE_NODE %
+}
+
+\newcommand{\TMVMINTERNALEDGE}[1] {% TM_VM_REPLACE_EDGE %
+}
 
 \begin{tikzpicture}[>=latex', shorten >=1pt, auto,
                     node distance=2.5cm, scale=1,
@@ -17,7 +21,7 @@
   }
 
   %{STATES}%
-  \node[\TMVMINTERNAL{abc}, state] (abc) {$abc$};
+  \node[\TMVMINTERNALNODE{abc}, state] (abc) {$abc$};
 
   \path[->]
     %{EDGES}%

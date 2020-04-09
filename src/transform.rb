@@ -84,8 +84,6 @@ def transform(description, options)
   aliases = description[:aliases].keys
   full_aliases = description[:aliases]
 
-  puts description[:transitions].keys.inspect
-
   description[:transitions] = description[:transitions].map { |k,v|
     if !(states.include? k)
       puts "unknown state '#{k}' in transitions"
@@ -95,7 +93,6 @@ def transform(description, options)
     next [
       k,
       v.map { |t|
-        puts transform_transition(states, symbols, aliases, full_aliases, k, t, options)
         transform_transition(states, symbols, aliases, full_aliases, k, t, options)
       }.flatten
     ]
