@@ -22,6 +22,12 @@
 \newcommand{\TMVMCOMPLETEINPUT} {% TM_VM_REPLACE_COMPLETE_INPUT %
 }
 
+\newcommand{\TMVMCOMPLETETAPE} {% TM_VM_REPLACE_COMPLETE_TAPE %
+}
+
+\newcommand{\TMVMSTEP} {% TM_VM_REPLACE_STEP %
+}
+
 \begin{tikzpicture}[>=latex', shorten >=1pt, auto,
                     node distance=2.5cm, scale=1,
                     transform shape, align=center]
@@ -29,6 +35,8 @@
   \tikzset{
     state/.style = {shape=circle, draw, minimum size=1cm}
   }
+
+  \tikzstyle{highlight}=[draw=blue,text=blue]
 
   %{STATES}%
 

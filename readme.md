@@ -1,6 +1,6 @@
 # Turing Machine Virtual Machine
 
-> **WIP**: Almost nothing is implemented as of right now, this just serves as a list of features that will be implemented sometime soon hopefully
+> **WIP**: At the moment everything except actually outputting files is implemented, the parsing of the input file, parsing cli args and running the vm all works. Generating a template also works. Only outputting the final product is not yet implemented.
 
 The idea is to make it easy to run **small** turing machines and visualize their state using tex.
 
@@ -25,8 +25,6 @@ Check out the `input.tm` file for an example of how the tuing machine needs to b
 Run the example turing machine as follows:
 
 `ruby src/main.rb --output svg input.tm`
-
-Eventually standard in will be an accepted way of feeding the TM these commands 
 
 ## Requirements
 

@@ -31,18 +31,6 @@ flags:
 
     input_file = args.last
 
-
-    # there are 3 options:
-    # - invoked without any flags / options, just the filepath
-    # - invoked with flags / options followed by filepath
-    # - invoked without any flags / optinos, except -v / --version, filepath omitted
-    # It is not easy to see wether option 1 or 3 was used, therefore it is checked if the last argument
-    # starts with "-". This means filepaths cannot start with "-" or they will be recognized as flags
-    # if args.length >= 2 or !args.last.start_with?("-") # option 1 or 2
-    #   args = args.clip # remove filepath
-    # end
-    # the assumption that args.last was the filepath was incorrect
-
     skip_next = false
 
     for index in 0 ... args.size

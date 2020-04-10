@@ -37,7 +37,7 @@ def generate_template(description, options)
         from.push t[:from_id] && t[:from_symbol] == 'BLANK' ? '\\square' : t[:from_symbol]
         to.push   t[:to_id]   && t[:to_symbol]   == 'BLANK' ? '\\square' : t[:to_symbol]
       }
-      id = state + "-" + from.join("-")
+      id = state + "-" + from.map{ |s| s == '\\square' ? 'BLANK' : s }.join("-")
       from_label = from.join(", ")
       to_label   = to.join(", ")
       loop = g[0][:loop] ? ', loop above' : ''

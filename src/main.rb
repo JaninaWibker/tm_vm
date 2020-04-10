@@ -22,8 +22,6 @@ def main(args)
 
   parsed[:description] = transform(parsed[:description], options)
 
-  pp parsed
-
   if options.template != nil
     output = output_begin(parsed, options)
     run(parsed) do |state|
