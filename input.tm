@@ -43,7 +43,7 @@ transitions = {
 
 input = ['a', 'b', '0', '1'] # each symbol is provided seperate (tokenizing is not part of this project)
 
-step 4
+step 6
 
 % OPTIONS %
 

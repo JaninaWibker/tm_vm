@@ -25,11 +25,11 @@ def main(args)
   pp parsed
 
   if options.template != nil
-    output_begin(parsed, options)
-    run(parsed) do |parsed, state|
-      output_stream(parsed, options, state)
+    output = output_begin(parsed, options)
+    run(parsed) do |state|
+      output = output_stream(output, parsed, options, state)
     end
-    output_end(parsed, options)
+    output_end(output, parsed, options)
   else
     File.write(
       options.filepath + '.tex',

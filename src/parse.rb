@@ -100,6 +100,7 @@ def tm_parse_transition(str)
       :from_id     => from_alias,
       :to_symbol   => to_symbol,
       :to_id       => to_alias,
+      :from_state  => nil, # to be filled in later (in src/transform.rb)
       :to_state    => to_state,
       :loop        => loop,
       :direction   => direction

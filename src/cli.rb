@@ -99,8 +99,6 @@ flags:
 
       elsif value.start_with?('-')
 
-        # TODO: split args[index] up into 1 character wide strings in order to support "-et" and similar
-
         for flag in value[1..-1].split("")
 
           puts flag
