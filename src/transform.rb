@@ -84,6 +84,11 @@ def transform(description, options)
   aliases = description[:aliases].keys
   full_aliases = description[:aliases]
 
+  if !states.include? description[:start]
+    puts "start state does not exist (#{description[:start]})"
+    exit 1
+  end
+
   description[:transitions] = description[:transitions].map { |k,v|
     if !(states.include? k)
       puts "unknown state '#{k}' in transitions"

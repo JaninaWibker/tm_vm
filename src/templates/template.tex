@@ -1,15 +1,25 @@
 \documentclass{article}
 \usepackage{tikz}
 \usepackage{amssymb}
-\begin{document}
 \usetikzlibrary{automata, positioning, arrows}
+\begin{document}
+\pagestyle{empty}
 \begin{figure}[ht]
 \centering
 
-\newcommand{\TMVMINTERNALNODE}[1] {% TM_VM_REPLACE_NODE %
+\newcommand{\TMVMNODE}[1] {% TM_VM_REPLACE_NODE %
 }
 
-\newcommand{\TMVMINTERNALEDGE}[1] {% TM_VM_REPLACE_EDGE %
+\newcommand{\TMVMEDGE}[1] {% TM_VM_REPLACE_EDGE %
+}
+
+\newcommand{\TMVMCURRSTATE} {%TM_VM_REPLACE_CURR_STATE %
+}
+
+\newcommand{\TMVMCURRSYMBOL} {% TM_VM_REPLACE_CURR_SYMBOL %
+}
+
+\newcommand{\TMVMCOMPLETEINPUT} {% TM_VM_REPLACE_COMPLETE_INPUT %
 }
 
 \begin{tikzpicture}[>=latex', shorten >=1pt, auto,
@@ -21,7 +31,6 @@
   }
 
   %{STATES}%
-  \node[\TMVMINTERNALNODE{abc}, state] (abc) {$abc$};
 
   \path[->]
     %{EDGES}%

@@ -16,7 +16,7 @@ aliases = {
 
 transitions = {
   z0: [
-    'a' | 'b' -> z0 + ,  # when 'a' is read, output 'b' and change to state z0 and move the head right (+)
+    'a' | 'b' -> z1 + ,  # when 'a' is read, output 'b' and change to state z0 and move the head right (+)
     x | x -> z0 +,       # alias; this expands to: 'a' | 'a' -> z0 +, 'b' | 'b' -> z0 +, 'c' | 'c' -> z0 +
     BLANK | '0' -> zrr - # use BLANK for the blank symbol; use - to move the head left
   ],

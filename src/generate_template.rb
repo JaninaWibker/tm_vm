@@ -1,5 +1,23 @@
 MULTIPLIER = 1 # this can be changed when tabs are used instead of spaces
 
+def merge_similar(state, transitions) # returns an array of groups, each group consists of similar transitions
+
+  known = {}
+
+  transitions
+    .map { |t| [t[:to_state] + "_" + t[:direction].to_s, t] }
+    .each { |(id, t)|
+      if known.key? id
+        known[id].push(t)
+      else
+        known[id] = [t]
+      end
+  }
+
+  return known.values
+
+end
+
 def generate_template(description, options)
 
   template = File.read('./src/templates/template.tex')
@@ -7,20 +25,29 @@ def generate_template(description, options)
   nodes = description[:states]
     .map(&:itself)
     .map { |(id, label)|
-      "\\node[\\TMVMINTERNALNODE{#{id}}, state#{description[:start] == id ? ', initial' : ''}] (#{id}) {$#{label}$};"
+      "\\node[\\TMVMNODE{#{id}}, state#{description[:start] == id ? ', initial' : ''}] (#{id}) {$#{label}$};"
     }
 
-  edges = description[:transitions].map { |state, transitions|
-    transitions.map { |t|
-      id = state + "-" + t[:from_symbol]
-      loop = t[:loop] ? ', loop above' : ''
-      from = t[:from_id] && t[:from_symbol] == 'BLANK' ? '\\square' : t[:from_symbol]
-      to   = t[:from_id] && t[:to_symbol]   == 'BLANK' ? '\\square' : t[:to_symbol]
-      label = "#{from} | #{to} #{t[:direction] == 1 ? 'R' : t[:direction] == -1 ? 'L' : ''}"
+  edges = description[:transitions]
+    .map { |state, transitions| [state, merge_similar(state, transitions)] }
+    .map { |(state, groups)| groups.map { |g|
+      from = []
+      to   = []
+      g.map { |t|
+        from.push t[:from_id] && t[:from_symbol] == 'BLANK' ? '\\square' : t[:from_symbol]
+        to.push   t[:to_id]   && t[:to_symbol]   == 'BLANK' ? '\\square' : t[:to_symbol]
+      }
+      id = state + "-" + from.join("-")
+      from_label = from.join(", ")
+      to_label   = to.join(", ")
+      loop = g[0][:loop] ? ', loop above' : ''
+      direction  = g[0][:direction] == 1 ? 'R' : g[0][:direction] == -1 ? 'L' : ''
 
-      "(#{state}) edge[\\TMVMINTERNALEDGE{#{id}}#{loop}] node {$#{label}$} (#{t[:to_state]})"
+      label = "#{from_label} \\vert #{to_label} #{direction}"
+
+      next "(#{state}) edge[\\TMVMEDGE{#{id}}#{loop}] node {$#{label}$} (#{g[0][:to_state]})"
     }
-  }.flatten
+  }
 
   state_line  = 0
   state_col   = 0
@@ -53,8 +80,12 @@ def generate_template(description, options)
     end
   end
 
+  edges_str = edges.map { |edges|
+    edges.map { |edge| " " * (edge_col * MULTIPLIER) + edge}.join("\n") + "\n"
+  }
+
   nodes_str = nodes.map { |node| " " * (state_col * MULTIPLIER) + node }
-  edges_str = edges.map { |edge| " " * (edge_col  * MULTIPLIER) + edge }
+  # edges_str = edges.map { |edge| " " * (edge_col  * MULTIPLIER) + edge }
 
   return template[0..state_pos] +
          (nodes_str.join("\n")) +
