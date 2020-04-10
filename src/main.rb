@@ -16,7 +16,13 @@ def main(args)
 
   puts "options: " + options.inspect
 
-  parsed = parse_tm(File.read(options.filepath))
+  parsed = nil
+
+  begin
+    parsed = parse_tm(File.read(options.filepath))
+  rescue Errno::ENOENT => e
+    $stderr.puts "File '#{options.filepath}' not found: #{e}"
+  end
 
   # TODO: combine cli options and file options into one (cli takes precedence)
 
