@@ -1,11 +1,7 @@
 require 'fileutils'
 require 'tmpdir'
 
-def tm_string_no_capture()
-  '(?:"[^"]*")|(?:\'[^\']*\')'
-end
-
-ID = '[_a-zA-Z]+[_a-zA-Z0-9]*'
+require './src/tm_re.rb'
 
 def mkdir_if_not_exists(path)
   dirname = File.dirname(path)
@@ -37,7 +33,7 @@ def output_stream(output, tm, options, state)
     ('"' + state[:prev_symbol] + '"') :
     ("'" + state[:prev_symbol] + "'")
 
-  not_symbol_re = "(?:(?!#{symbol_re_prepared})(?:#{tm_string_no_capture()}|#{ID}))"
+  not_symbol_re = "(?:(?!#{symbol_re_prepared})(?:#{TM.string_no_capture()}|#{TM::ID}))"
 
   symbol_re = "(?:(?:(?:#{not_symbol_re},\\s*)*(?:#{symbol_re_prepared}),\\s*(?:#{not_symbol_re},\\s*)*#{not_symbol_re})|(?:#{not_symbol_re},\\s*)*#{symbol_re_prepared})"
 

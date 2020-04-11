@@ -1,58 +1,9 @@
-ID = '[_a-zA-Z]+[_a-zA-Z0-9]*'
-
-def tm_array(contents)
-  inner = '((?:' + contents + '\s*,\s*)*(?:' + contents + '))?'
-  '\[\s*' + inner + '\s*\]'
-end
-
-def tm_array_no_capture(contents)
-  inner = '(?:(?:' + contents + '\s*,\s*)*(?:' + contents + '))?'
-  '\[\s*' + inner + '\s*\]'
-end
-
-def tm_object(contents)
-  inner = '((?:(' + ID + '):\s*' + contents + '\s*,\s*)*(?:(' + ID + '):\s*' + contents + '))?'
-  '\{\s*' + inner + '\s*\}'
-end
-
-def tm_assignment(lefthandside, righthandside)
-  lefthandside + '\s*=\s*' + righthandside
-end
-
-def tm_string()
-  '(?:"([^"]*)")|(?:\'([^\']*)\')'
-end
-
-def tm_string_no_capture()
-  '(?:"[^"]*")|(?:\'[^\']*\')'
-end
-
-def tm_section(ident)
-  '\n?%\s?' + ident + '\s?%\n'
-end
-
-def tm_transition()
-  '((?:' + tm_string_no_capture() + '|' + ID + ')\s*\|\s*(?:' + tm_string_no_capture() + '|' + ID + ')\s*)' +
-    '(?:(?:->\s*' + ID + '\s*)|' +
-       '(?:<>\s*'         + '))' +
-    '(?:\+|\-|\/)'
-end
-
-def tm_transition_no_capture()
-  '(?:(?:' + tm_string_no_capture() + '|' + ID + ')\s*\|\s*(?:' + tm_string_no_capture() + '|' + ID + ')\s*)' +
-    '(?:(?:->\s*' + ID + '\s*)|' +
-       '(?:<>\s*'         + '))' +
-    '(?:\+|\-|\/)'
-end
-
-def tm_parse_array(str, type_re)
-  str.split(Regexp.new '(' + type_re + ')\s*,\s*')
-end
+require './src/tm_re.rb'
 
 def tm_parse_transition(str)
-  transition_re = Regexp.new '(?:(' + ID + ')|(?:' + tm_string() + '))\s*\|\s*' +
-                             '(?:(' + ID + ')|(?:' + tm_string() + '))' +
-                             '(?:\s*(->)\s*(' + ID + ')\s*|\s*(<>)\s*)' +
+  transition_re = Regexp.new '(?:(' + TM::ID + ')|(?:' + TM.string() + '))\s*\|\s*' +
+                             '(?:(' + TM::ID + ')|(?:' + TM.string() + '))' +
+                             '(?:\s*(->)\s*(' + TM::ID + ')\s*|\s*(<>)\s*)' +
                              '(\+|\-|\/)'
   str.match(transition_re) { |match|
     from_id, from_dblquote, from_sglquote,
@@ -115,34 +66,34 @@ def tm_remove_comments(input)
 end
 
 def parse_description(description)
-  states_re = Regexp.new tm_assignment(
+  states_re = Regexp.new TM.assignment(
     'states',
-    tm_array(ID + '\s*\$[^\$]+\$')
+    TM.array(TM::ID + '\s*\$[^\$]+\$')
   )
 
-  inputs_re = Regexp.new tm_assignment(
+  inputs_re = Regexp.new TM.assignment(
     'inputs',
-    tm_array(tm_string())
+    TM.array(TM.string())
   )
 
-  aliases_re = Regexp.new tm_assignment(
+  aliases_re = Regexp.new TM.assignment(
     'aliases',
-    tm_object(tm_array(tm_string()))
+    TM.object(TM.array(TM.string()))
   )
 
-  transitions_re = Regexp.new tm_assignment(
+  transitions_re = Regexp.new TM.assignment(
     'transitions',
-    tm_object(tm_array(tm_transition_no_capture()))
+    TM.object(TM.array(TM.transition_no_capture()))
   )
 
-  start_re = Regexp.new tm_assignment(
+  start_re = Regexp.new TM.assignment(
     'start',
-    '(' + ID + ')'
+    '(' + TM::ID + ')'
   )
 
   states = states_re.match(description) { |match|
     Hash[*match.captures[0]
-      .split(Regexp.new '\s*(' + ID + ')\s*\$([^\$]+)\$(?:,\s*)?')
+      .split(Regexp.new '\s*(' + TM::ID + ')\s*\$([^\$]+)\$(?:,\s*)?')
       .select { |str| str != "" }
     ]
   }
@@ -155,21 +106,21 @@ def parse_description(description)
 
   aliases = aliases_re.match(description) { |match|
     Hash[*match.captures[0]
-      .split(Regexp.new '\s*(' + ID + '):\s*' + tm_array(tm_string_no_capture()) + '(?:,\s*)?')
+      .split(Regexp.new '\s*(' + TM::ID + '):\s*' + TM.array(TM.string_no_capture()) + '(?:,\s*)?')
       .select { |str| str != "" }
     ]
-      .map { |k,v| [k, tm_parse_array(v, tm_string_no_capture())] }
+      .map { |k,v| [k, TM.parse_array(v, TM.string_no_capture())] }
       .map { |k,v| [
         k,
         v
           .filter { |str| str != '' }
-          .map    { |str| str.match(Regexp.new tm_string()).captures[1] }
+          .map    { |str| str.match(Regexp.new TM.string()).captures[1] }
       ] }.to_h
   }
 
   transitions = transitions_re.match(description) { |match|
     transitions_arr = match.captures[0]
-      .split(Regexp.new '\s*(' + ID + '):\s*' + tm_array(tm_transition_no_capture()) + '(?:,\s*)?')
+      .split(Regexp.new '\s*(' + TM::ID + '):\s*' + TM.array(TM.transition_no_capture()) + '(?:,\s*)?')
       .select { |str| str != "" }
 
     obj = {}
@@ -185,8 +136,8 @@ def parse_description(description)
       cur = transitions_arr[index]
       nxt = transitions_arr[index+1]
 
-      if (nxt =~ Regexp.new(ID)) != 0 && nxt != nil
-        obj[cur] = tm_parse_array(nxt, tm_transition_no_capture())
+      if (nxt =~ Regexp.new(TM::ID)) != 0 && nxt != nil
+        obj[cur] = TM.parse_array(nxt, TM.transition_no_capture())
                     .filter { |str| str != '' }
                     .map { |str| tm_parse_transition str }
         skip_next = true
@@ -211,9 +162,9 @@ end
 
 def parse_execution(execution)
 
-  input_re = Regexp.new tm_assignment(
+  input_re = Regexp.new TM.assignment(
     'input',
-    tm_array(tm_string())
+    TM.array(TM.string())
   )
 
   step_re = /step\s+([0-9]+)/
@@ -245,7 +196,7 @@ def parse_tm(input)
 
   input = tm_remove_comments(input)
 
-  _, *sections = input.split(Regexp.new tm_section('(DESCRIPTION|EXECUTION|OPTIONS)'))
+  _, *sections = input.split(Regexp.new TM.section('(DESCRIPTION|EXECUTION|OPTIONS)'))
   sections = Hash[*sections.map { |x| x.strip }]
 
   if !sections['DESCRIPTION']
