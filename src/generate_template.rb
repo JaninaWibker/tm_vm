@@ -37,7 +37,10 @@ def generate_template(description, options)
         from.push t[:from_id] && t[:from_symbol] == 'BLANK' ? '\\square' : t[:from_symbol]
         to.push   t[:to_id]   && t[:to_symbol]   == 'BLANK' ? '\\square' : t[:to_symbol]
       }
-      id = state + "-" + from.map{ |s| s == '\\square' ? 'BLANK' : s }.join("-")
+      symbols = from.map { |s|
+        s == '\\square' ? 'BLANK' : (s.include?("'") ? ('"' + s + '"') : ("'" + s + "'"))
+      }.join(", ")
+
       from_label = from.join(", ")
       to_label   = to.join(", ")
       loop = g[0][:loop] ? ', loop above' : ''
@@ -45,7 +48,7 @@ def generate_template(description, options)
 
       label = "#{from_label} \\vert #{to_label} #{direction}"
 
-      next "(#{state}) edge[\\TMVMEDGE{#{id}}#{loop}] node {$#{label}$} (#{g[0][:to_state]})"
+      next "(#{state}) edge[\\TMVMEDGE{#{state}}{#{symbols}}#{loop}] node {$#{label}$} (#{g[0][:to_state]})"
     }
   }
 

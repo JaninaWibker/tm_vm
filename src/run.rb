@@ -32,7 +32,7 @@ def run(tm)
   prev_symbol = nil # values that might
   prev_state  = nil # be useful renderers
 
-  for i in 0..steps-1
+  for i in 0..steps # steps + 1, the 0th step can be seen as the initial state of the tm
     transition = transitions[state].find { |t|
       # could be combined into a single condition but would make it far less readable
       if !t[:from_id] && t[:from_symbol] == symbol
