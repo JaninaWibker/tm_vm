@@ -45,6 +45,14 @@ def run(tm)
         false
       end
     }
+
+    yield ({
+      :state      => state,      :prev_state  => prev_state,
+      :symbol     => symbol,     :prev_symbol => prev_symbol,
+      :tape       => tape,       :position    => pos,
+      :transition => transition, :step        => i
+    })
+
     new_symbol = (transition[:to_id] ?
       transition[:to_symbol] == 'BLANK' ? nil : symbol :
       transition[:to_symbol])
@@ -56,11 +64,5 @@ def run(tm)
     state = transition[:to_state]
     tape, pos, symbol = get_symbol(tape, pos).values_at(:tape, :new_pos, :symbol)
 
-    yield ({
-      :state      => state,      :prev_state  => prev_state,
-      :symbol     => symbol,     :prev_symbol => prev_symbol,
-      :tape       => tape,       :position    => pos,
-      :transition => transition, :step        => i
-    })
   end
 end

@@ -1,11 +1,11 @@
 require 'pp'
 
-require './src/cli.rb'
-require './src/parse.rb'
-require './src/transform.rb'
-require './src/generate_template.rb'
-require './src/run.rb'
-require './src/output.rb'
+require_relative './cli.rb'
+require_relative './parse.rb'
+require_relative './transform.rb'
+require_relative './generate_template.rb'
+require_relative './run.rb'
+require_relative './output.rb'
 
 def main(args)
   options = parse_args(args)

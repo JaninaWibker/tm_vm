@@ -1,2 +1,3 @@
 *.tm.tex
 *.tm.svg
+output/**

@@ -1,4 +1,4 @@
-require './src/core_ext.rb'
+require_relative './core_ext.rb'
 
 VERSION = 0.1
 
@@ -59,7 +59,7 @@ flags:
         if value == '--template'
           # assume next arg is a filepath
           if !args[index+1].start_with? '-'
-            options.template = args[index+1]
+            options.template = File.join(Dir.pwd, args[index+1])
             skip_next = true
           else
             puts "invalid option for '--template', supplied '#{args[index+1]}' but was expecting a filepath"
@@ -109,7 +109,7 @@ flags:
           if flag == 't'
             # assume next arg is a filepath
             if !args[index+1].start_with? '-'
-              options.template = args[index+1]
+              options.template = File.join(Dir.pwd, args[index+1])
               skip_next = true
             else
               puts "invalid option for '-t', supplied '#{args[index+1]}' but was expecting a filepath"
@@ -136,7 +136,7 @@ flags:
         end
 
       elsif index == args.size-1
-        options.filepath = value
+        options.filepath = File.join(Dir.pwd, value)
       end
 
     end

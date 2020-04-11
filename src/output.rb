@@ -1,13 +1,11 @@
 require 'fileutils'
 require 'tmpdir'
 
-require './src/tm_re.rb'
+require_relative './tm_re.rb'
 
 def mkdir_if_not_exists(path)
-  dirname = File.dirname(path)
-  unless File.directory?(dirname)
-    FileUtils.mkdir_p(dirname)
-  end
+  dirname = File.join(Dir.pwd, path)
+  Dir.mkdir dirname unless File.exists?(dirname)
 end
 
 def output_begin(tm, options)
@@ -21,17 +19,16 @@ def output_begin(tm, options)
 
   mkdir_if_not_exists("output")
 
-  return { :template => template, :output => Array.new(10) }
+  return { :template => template, :output => Array.new(tm[:execution][:steps]) }
 end
 
 def output_stream(output, tm, options, state)
+
   puts state
 
-  # TODO: use prev_symbol / prev_state or symbol / state? (consider that :prev_symbol is nil at first)
-
-  symbol_re_prepared = state[:prev_symbol] == nil ? 'BLANK' : state[:prev_symbol].include?("'") ?
-    ('"' + state[:prev_symbol] + '"') :
-    ("'" + state[:prev_symbol] + "'")
+  symbol_re_prepared = state[:symbol] == nil ? 'BLANK' : state[:symbol].include?("'") ?
+    ('"' + state[:symbol] + '"') :
+    ("'" + state[:symbol] + "'")
 
   not_symbol_re = "(?:(?!#{symbol_re_prepared})(?:#{TM.string_no_capture()}|#{TM::ID}))"
 
@@ -40,7 +37,7 @@ def output_stream(output, tm, options, state)
   edge_re = "\\\\TMVMEDGE\\{#{state[:state]}\\}\\{#{symbol_re}\\}"
 
   template = (output[:template]
-    .gsub(Regexp.new("\\\\TMVMNODE\\{#{state[:prev_state]}\\}"), 'highlight' + (' ' * (2 + state[:prev_state].size)))
+    .gsub(Regexp.new("\\\\TMVMNODE\\{#{state[:state]}\\}"), 'highlight' + (' ' * (2 + state[:state].size)))
     .gsub(Regexp.new(edge_re)) { |capture|
       'highlight' + (' ' * (capture.size - 'highlight'.size))
     }
@@ -50,7 +47,6 @@ def output_stream(output, tm, options, state)
     .gsub('% TM_VM_REPLACE_COMPLETE_TAPE %', state[:tape].join(''))
     .gsub('% TM_VM_REPLACE_STEP %', state[:step].to_s)
   )
-  puts template
 
   output[:output][state[:step]] = template
 
@@ -58,5 +54,8 @@ def output_stream(output, tm, options, state)
 end
 
 def output_end(output, tm, options)
-  puts output
+  output[:output].each_with_index { |content, index|
+    filepath = File.join(Dir.pwd, "output", File.basename(options.filepath) + "-#{index}.tex")
+    File.write(filepath, content)
+  }
 end

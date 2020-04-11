@@ -1,4 +1,4 @@
-require './src/tm_re.rb'
+require_relative './tm_re.rb'
 
 def tm_parse_transition(str)
   transition_re = Regexp.new '(?:(' + TM::ID + ')|(?:' + TM.string() + '))\s*\|\s*' +
