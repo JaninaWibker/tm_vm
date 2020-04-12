@@ -63,6 +63,13 @@ For that simply modify the `highlight` style:
 ## Requirements
 
 - ruby
-- a latex distribution (when outputting to anything other than tex)
-- dvisvgm (when outputting to anything other than tex)
+- a latex*\** distribution (when outputting to anything other than tex)
+- dvisvgm*\** (when outputting to anything other than tex)
+- inkscape*\** (when outputting to png)
 - imagemagick (when outputting to gif)
+
+> *latex*: [BasicTex](https://tug.org/mactex/morepackages.html) is a pretty light weight latex distribution for macOS
+>
+> *dvisvgm*: Can be difficult to install on macOS, [this](https://gist.github.com/tobywf/aeeeee63053aaaa841b4032963406684) script can help with that (some modifications need to be made for it to work properly)
+>
+> *inkscape*: [inkscape 0.9x for macOS is a 32 bit app and, starting with Catalina, no longer supported by macOS](https://inkscape.org/news/2019/11/10/macos-1015-catalina-support/). There is a development release of Inkscape 1.0 available.
