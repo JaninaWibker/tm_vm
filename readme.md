@@ -63,9 +63,9 @@ For that simply modify the `highlight` style:
 ## Requirements
 
 - ruby
-- a latex*\** distribution (when outputting to anything other than tex)
-- dvisvgm*\** (when outputting to anything other than tex)
-- inkscape*\** (when outputting to png)
+- a latex* distribution (when outputting to anything other than tex)
+- dvisvgm* (when outputting to anything other than tex)
+- inkscape* (when outputting to png)
 - imagemagick (when outputting to gif)
 
 > *latex*: [BasicTex](https://tug.org/mactex/morepackages.html) is a pretty light weight latex distribution for macOS
