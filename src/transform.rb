@@ -40,7 +40,7 @@ def transform_transition(states, symbols, aliases, full_aliases, k, t, options)
 
   t[:from_state] = k
 
-  if options.expand_aliases
+  if options[:expand_aliases]
     if t[:from_id] && t[:from_symbol] != 'BLANK'
       symbols = full_aliases[t[:from_symbol]]
 

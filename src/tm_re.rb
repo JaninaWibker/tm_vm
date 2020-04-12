@@ -29,6 +29,10 @@ module TM
     '(?:"[^"]*")|(?:\'[^\']*\')'
   end
 
+  def TM.number()
+    '([0-9]+)'
+  end
+
   def TM.section(ident)
     '\n?%\s?' + ident + '\s?%\n'
   end

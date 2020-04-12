@@ -186,9 +186,52 @@ def parse_execution(execution)
 end
 
 def parse_options(options)
+
+  expand_aliases_re = Regexp.new TM.assignment(
+    'expand_aliases',
+    '(true|false|yes|no)'
+  )
+
+  output_re = Regexp.new TM.assignment(
+    'output',
+    '(tex|svg|gif|react)|' + TM.array('(?:tex|svg|gif|react)')
+  )
+
+  duration_re = Regexp.new TM.assignment(
+    'duration',
+    TM.number()
+  )
+
+  template_re = Regexp.new TM.assignment(
+    'template',
+    '.+'
+  )
+
+  expand_aliases = expand_aliases_re.match(options) { |match|
+    match.captures[0] == 'true' || match.captures[0] == 'yes'
+  }
+
+  output = output_re.match(options) { |match|
+    if match.captures[0] != nil
+      [match.captures[0]]
+    else
+      match.captures[1].split(/,\s*/)
+    end
+  }
+
+  duration = duration_re.match(options) { |match|
+    match.captures[0].to_i
+  }
+
+  template_re.match(options) { |match|
+    puts "template option is not allowed in the input file"
+    exit 1
+  }
+
   return {
-    :output => nil,
-    :duration => 0
+    :output         => output,
+    :expand_aliases => expand_aliases,
+    :duration       => duration
   }
 end
 

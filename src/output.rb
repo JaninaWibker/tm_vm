@@ -10,6 +10,11 @@ def tex2svg(basedir, basename)
   }
 end
 
+def tex2gif(basedir, basename)
+  Dir.mktmpdir { |dir|
+  }
+end
+
 def mkdir_if_not_exists(path)
   dirname = File.join(Dir.pwd, path)
   Dir.mkdir dirname unless File.exists?(dirname)
@@ -21,9 +26,9 @@ end
 def output_begin(tm, options)
   template = nil
   begin
-    template = File.read(options.template)
+    template = File.read(options[:template])
   rescue Errno::ENOENT => e
-    $stderr.puts "File '#{options.template}' not found: #{e}"
+    $stderr.puts "File '#{options[:template]}' not found: #{e}"
     exit 1
   end
 
@@ -64,7 +69,7 @@ end
 def output_end(output, tm, options)
   output[:output].each_with_index { |content, index|
     basedir = File.join(Dir.pwd, "output")
-    basename = File.basename(options.filepath) + "-#{index}"
+    basename = File.basename(options[:filepath]) + "-#{index}"
     File.write(File.join(basedir, basename + ".tex"), content)
     tex2svg(basedir, basename)
   }

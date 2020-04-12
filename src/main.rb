@@ -8,27 +8,32 @@ require_relative './run.rb'
 require_relative './output.rb'
 
 def main(args)
-  options = parse_args(args)
-  if options.filepath == nil
+  cli_options = parse_args(args)
+  if cli_options[:filepath] == nil
     puts "must include a file path"
     exit 1
   end
 
-  puts "options: " + options.inspect
-
   parsed = nil
 
   begin
-    parsed = parse_tm(File.read(options.filepath))
+    parsed = parse_tm(File.read(cli_options[:filepath]))
   rescue Errno::ENOENT => e
-    $stderr.puts "File '#{options.filepath}' not found: #{e}"
+    $stderr.puts "File '#{cli_options[:filepath]}' not found: #{e}"
   end
 
-  # TODO: combine cli options and file options into one (cli takes precedence)
+  options = { :output => 'tex', :expand_aliases => true, :duration => 500, :filepath => nil, :template => nil }
+    .merge(parsed[:options].delete_if { |k, v| v.nil? })
+    .merge(cli_options.delete_if { |k, v| v.nil? })
+
+  puts "options: " + options.inspect
 
   parsed[:description] = transform(parsed[:description], options)
 
-  if options.template != nil
+  puts "skipped generating files for testing purposes"
+  exit 0
+
+  if options[:template] != nil
     output = output_begin(parsed, options)
     run(parsed) do |state|
       output = output_stream(output, parsed, options, state)

@@ -51,5 +51,13 @@ step 6
 # the options include:
 # - output format,
 # - duration (between state transitions for gif / react output)
+# - expand aliases
+#
+# the --template option is NOT settable inside this file, this file is ment to work
+# for both generating the template and the final output without any modifications
 #
 # command line flags take precedence over the options in the file
+
+expand_aliases = true
+output = tex
+duration = 200

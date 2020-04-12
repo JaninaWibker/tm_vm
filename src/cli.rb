@@ -2,18 +2,14 @@ require_relative './core_ext.rb'
 
 VERSION = 0.1
 
-class Options
-  attr_accessor :output, :filepath, :template, :expand_aliases, :duration
-
-  def initialize()
-    @output = "tex"
-    @expand_aliases = true
-    @duration = 500
-  end
-end
-
 def parse_args(args)
-  options = Options.new()
+  options = {
+      :output         => nil,
+      :expand_aliases => nil,
+      :duration       => nil,
+      :filepath       => nil,
+      :template       => nil
+  }
 
   if args.length == 0
     puts %{usage: ruby main.rb <optional flags> <input file>
@@ -48,7 +44,7 @@ flags:
         if value == '--output'
           # next value should be the output format
           if ['tex', 'svg', 'gif', 'react'].include? args[index+1]
-            options.output = args[index+1]
+            options[:output] = [args[index+1]]
             skip_next = true
           else
             puts "invalid option for '--output', supplied '#{args[index+1]}' but was expecting one of 'tex', 'svg', 'gif' or 'react'"
@@ -59,7 +55,7 @@ flags:
         if value == '--template'
           # assume next arg is a filepath
           if !args[index+1].start_with? '-'
-            options.template = File.join(Dir.pwd, args[index+1])
+            options[:template] = File.join(Dir.pwd, args[index+1])
             skip_next = true
           else
             puts "invalid option for '--template', supplied '#{args[index+1]}' but was expecting a filepath"
@@ -69,7 +65,7 @@ flags:
 
         if value == '--duration'
           if (args[index+1] =~ /^[0-9]+$/) != nil
-            options.duration = args[index+1].to_i
+            options[:duration] = args[index+1].to_i
           else
             puts "invalid option for '--duration', supplied '#{args[index+1]}' but was expecting a number"
             exit 1
@@ -77,11 +73,11 @@ flags:
         end
 
         if value == '--expand'
-          options.expand_aliases = true
+          options[:expand_aliases] = true
         end
 
         if value == '--no-expand'
-          options.expand_aliases = false
+          options[:expand_aliases] = false
         end
         # place other options here
 
@@ -98,7 +94,7 @@ flags:
 
           if flag == 'o'
             if ['tex', 'svg', 'gif', 'react'].include? args[index+1]
-              options.output = args[index+1]
+              options[:output] = [args[index+1]]
               skip_next = true
             else
               puts "invalid option for '-o', supplied '#{args[index+1]}' but was expecting one of 'tex', 'svg', 'gif' or 'react'"
@@ -109,7 +105,7 @@ flags:
           if flag == 't'
             # assume next arg is a filepath
             if !args[index+1].start_with? '-'
-              options.template = File.join(Dir.pwd, args[index+1])
+              options[:template] = File.join(Dir.pwd, args[index+1])
               skip_next = true
             else
               puts "invalid option for '-t', supplied '#{args[index+1]}' but was expecting a filepath"
@@ -119,7 +115,7 @@ flags:
 
           if flag == 'd'
             if (args[index+1] =~ /^[0-9]+$/) != nil
-              options.duration = args[index+1].to_i
+              options[:duration] = args[index+1].to_i
             else
               puts "invalid option for '-d', supplied '#{args[index+1]}' but was expecting a number"
               exit 1
@@ -127,16 +123,16 @@ flags:
           end
 
           if flag == 'e'
-            options.expand_aliases = true
+            options[:expand_aliases] = true
           end
 
           if flag == 'E'
-            options.expand_aliases = false
+            options[:expand_aliases] = false
           end
         end
 
       elsif index == args.size-1
-        options.filepath = File.join(Dir.pwd, value)
+        options[:filepath] = File.join(Dir.pwd, value)
       end
 
     end
