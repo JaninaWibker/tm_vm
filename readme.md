@@ -1,10 +1,11 @@
 # Turing Machine Virtual Machine
 
-> **WIP**: At the moment everything except actually outputting files is implemented, the parsing of the input file, parsing cli args and running the vm all works. Generating a template also works. Only outputting the final product is not yet implemented.
+> **WIP**: some features listed here are not yet implemented such as pdf and react output for example.
 
 The idea is to make it easy to run **small** turing machines and visualize their state using tex.
 
-You supply the data required to describe a *TM* (turing machine) and it will be turned into a tex document. This document will require a large amount of clean-up in regards to positioning of nodes (states) and edges, but this file (after clean-up) can then be used as an input (along side the description of the TM) and be used to generate pretty output for each state transition. This output can be a tex document, an svg, a GIF or even a React component.
+You supply the data required to describe a *TM* (turing machine) and it will be turned into a tex document. This document will require some amount of clean-up in regards to positioning of nodes (states) and edges, but this file (after clean-up) will then be used as an input (along side the description of the TM) and will be used to generate pretty output for each state transition. This output can be a tex document, an svg, a png, a pdf for each state transition. There are also GIF
+and react component outputs which aren't produced per state change.
 
 ## Usage
 
@@ -24,7 +25,40 @@ Check out the `input.tm` file for an example of how the tuing machine needs to b
 
 Run the example turing machine as follows:
 
-`ruby src/main.rb --output svg input.tm`
+```bash
+ruby src/main.rb input.tm # generate the template from input.tm
+$EDITOR input.tm.tex      # adjust the positioning of the states & edges
+ruby src/main.rb --template input.tm.tex input.tm # generate the output from the template and input.tm
+# output will be placed inside the `./output` directory
+```
+
+Most output formats have other output formats as a dependency:
+
+- **svg** depends on **tex**
+- **png** depends on **svg** (and thereby also tex)
+- **gif** depends on **png** (and thereby also tex, svg)
+- **pdf** depends on **tex**
+- **react** depends on **tex**
+
+Outputting to gif results in the outputs for tex, svg, png and gif to be generated and similar for all other output formats.
+
+## Features
+
+there are many macros that can be used inside of the tex template file:
+
+- `\TMVMCURRSTATE`: the current state
+- `\TMVMCURRSYMBOL`: the current symbol to be processed
+- `\TMVMCOMPLETEINPUT`: the complete input (initial state of tape)
+- `\TMVMCOMPLETETAPE`: the current state of the tape
+- `\TMVMSTEP`: the step that is currently being executed
+
+Alongside those macros it is also possible to modify how the highlighting of the active state / transition looks
+
+For that simply modify the `highlight` style:
+
+```latex
+\tikzstyle{highlight}=[draw=blue,text=blue]
+```
 
 ## Requirements
 

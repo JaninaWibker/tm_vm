@@ -13,8 +13,6 @@ require_relative './output.rb'
 # - dpi
 # for example
 
-# TODO: update readme to include new features, examples, ...
-
 # TODO: add silent mode flag (--silent)
 
 def main(args)
