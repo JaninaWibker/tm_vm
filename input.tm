@@ -59,5 +59,5 @@ step 6
 # command line flags take precedence over the options in the file
 
 expand_aliases = true
-output = tex
+output = svg
 duration = 200

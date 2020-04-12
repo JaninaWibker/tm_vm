@@ -31,4 +31,4 @@ Run the example turing machine as follows:
 - ruby
 - a latex distribution (when outputting to anything other than tex)
 - dvisvgm (when outputting to anything other than tex)
-
+- imagemagick (when outputting to gif)

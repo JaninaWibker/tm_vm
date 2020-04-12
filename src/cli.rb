@@ -44,7 +44,7 @@ flags:
         if value == '--output'
           # next value should be the output format
           if ['tex', 'svg', 'gif', 'react'].include? args[index+1]
-            options[:output] = [args[index+1]]
+            options[:output] = args[index+1].split(",")
             skip_next = true
           else
             puts "invalid option for '--output', supplied '#{args[index+1]}' but was expecting one of 'tex', 'svg', 'gif' or 'react'"
@@ -94,7 +94,7 @@ flags:
 
           if flag == 'o'
             if ['tex', 'svg', 'gif', 'react'].include? args[index+1]
-              options[:output] = [args[index+1]]
+              options[:output] = args[index+1].split(",")
               skip_next = true
             else
               puts "invalid option for '-o', supplied '#{args[index+1]}' but was expecting one of 'tex', 'svg', 'gif' or 'react'"

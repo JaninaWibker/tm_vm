@@ -7,6 +7,16 @@ require_relative './generate_template.rb'
 require_relative './run.rb'
 require_relative './output.rb'
 
+# TODO: add support for more options (possibly with --internal prefix) like:
+# - font-format
+# - loop
+# - dpi
+# for example
+
+# TODO: update readme to include new features, examples, ...
+
+# TODO: add silent mode flag (--silent)
+
 def main(args)
   cli_options = parse_args(args)
   if cli_options[:filepath] == nil
@@ -29,9 +39,6 @@ def main(args)
   puts "options: " + options.inspect
 
   parsed[:description] = transform(parsed[:description], options)
-
-  puts "skipped generating files for testing purposes"
-  exit 0
 
   if options[:template] != nil
     output = output_begin(parsed, options)
