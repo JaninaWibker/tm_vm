@@ -9,8 +9,8 @@ def tex2svg(basedir, basename, options)
                 options[:font_mode] == 'woff' ? '--font-format=woff' : ''
 
   Dir.mktmpdir { |dir|
-    system "latex -interaction=nonstopmode -output-directory=#{dir} #{File.join(basedir, basename + '.tex')} >/dev/null"
-    system "dvisvgm #{font_option} --output=#{File.join(basedir, basename)}.svg #{File.join(dir, basename)}.dvi 2&>/dev/null"
+    system "latex -interaction=nonstopmode -output-directory=#{dir} #{File.join(basedir, basename + '.tex')} >/dev/null 2>&1"
+    system "dvisvgm #{font_option} --output=#{File.join(basedir, basename)}.svg #{File.join(dir, basename)}.dvi >/dev/null 2>&1"
   }
 end
 
@@ -22,8 +22,9 @@ def svg2png(basedir, basename, options)
     "--export-filename=#{File.join(basedir, basename)}.png",
     File.join(basedir, basename) + ".svg"
   ]
+  File.delete(File.join(basedir, basename) + '.png') if File.exists? File.join(basedir, basename) + '.png'
 
-  system "inkscape #{flags.join(" ")} 2&>/dev/null"
+  system "inkscape #{flags.join(" ")} >/dev/null 2>&1"
 end
 
 def pngs2gif(basedir, inputfiles, outputfile, options)
@@ -34,7 +35,7 @@ def pngs2gif(basedir, inputfiles, outputfile, options)
     File.join(basedir, outputfile)
   ]
 
-  system "convert #{flags.join(" ")} 2&>/dev/null"
+  system "convert #{flags.join(" ")} >/dev/null 2>&1"
 end
 
 def tex2pdf(basedir, basename, options)
@@ -44,7 +45,7 @@ def tex2pdf(basedir, basename, options)
       "-output-directory=#{dir}",
       File.join(basedir, basename + '.tex')
     ]
-    system "pdflatex #{flags.join(" ")} &>/dev/null"
+    system "pdflatex #{flags.join(" ")} >/dev/null 2>&1"
     File.rename(File.join(dir, basename + '.pdf'), File.join(basedir, basename + '.pdf'))
    }
 end
@@ -81,9 +82,9 @@ def output_stream(output, tm, options, state)
   edge_re = "\\\\TMVMEDGE\\{#{state[:state]}\\}\\{#{symbol_re}\\}"
 
   template = (output[:template]
-    .gsub(Regexp.new("\\\\TMVMNODE\\{#{state[:state]}\\}"), 'highlight' + (' ' * (2 + state[:state].size)))
+    .gsub(Regexp.new("\\\\TMVMNODE\\{#{state[:state]}\\}"), 'n_highlight' + (' ' *  state[:state].size))
     .gsub(Regexp.new(edge_re)) { |capture|
-      'highlight' + (' ' * (capture.size - 'highlight'.size))
+      'e_highlight' + (' ' * (capture.size - 'e_highlight'.size))
     }
     .gsub('% TM_VM_REPLACE_CURR_STATE %', state[:state])
     .gsub('% TM_VM_REPLACE_CURR_SYMBOL %', state[:symbol] == nil ? '\\square' : state[:symbol])
@@ -131,6 +132,7 @@ def output_end(output, tm, options)
 
 
   output[:output].each_with_index { |content, index|
+    # next # TODO: remove
     basename = basename_no_index + "-" + index.to_s
 
     if sorted_output.include? "tex"
@@ -170,5 +172,7 @@ def output_end(output, tm, options)
       File.basename(options[:filepath] + ".gif"),
       { :loop => 0, :duration => options[:duration] }
     )
+
+    puts "written #{File.basename(options[:filepath])}.gif"
   end
 end

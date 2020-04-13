@@ -1,6 +1,6 @@
 # Turing Machine Virtual Machine
 
-> **WIP**: some features listed here are not yet implemented such as pdf and react output for example.
+> **WIP**: some features listed here are not yet implemented such as react and proper pdf output for example.
 
 The idea is to make it easy to run **small** turing machines and visualize their state using tex.
 

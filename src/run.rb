@@ -46,6 +46,8 @@ def run(tm)
       end
     }
 
+    break if transition == nil
+
     yield ({
       :state      => state,      :prev_state  => prev_state,
       :symbol     => symbol,     :prev_symbol => prev_symbol,

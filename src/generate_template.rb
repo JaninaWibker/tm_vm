@@ -25,7 +25,7 @@ def generate_template(description, options)
   nodes = description[:states]
     .map(&:itself)
     .map { |(id, label)|
-      "\\node[\\TMVMNODE{#{id}}, state#{description[:start] == id ? ', initial' : ''}] (#{id}) {$#{label}$};"
+      "\\node[state, \\TMVMNODE{#{id}}#{description[:start] == id ? ', initial' : ''}] (#{id}) {$#{label}$};"
     }
 
   edges = description[:transitions]
