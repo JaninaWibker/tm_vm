@@ -1,3 +1,4 @@
 *.tm.tex
 *.tm.svg
 output/**
+!output/input.tm.gif

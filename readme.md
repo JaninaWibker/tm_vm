@@ -1,5 +1,7 @@
 # Turing Machine Virtual Machine
 
+<img src="./output/input.tm.gif" alt="tm visualization gif" height="300" />
+
 > **WIP**: some features listed here are not yet implemented such as react and proper pdf output for example.
 
 The idea is to make it easy to run **small** turing machines and visualize their state using tex.
