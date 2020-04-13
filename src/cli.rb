@@ -15,7 +15,7 @@ def parse_args(args)
     puts %{usage: ruby main.rb <optional flags> <input file>
 
 flags:
-  -o, --output     Specify the output format (tex, svg, gif, react, default: svg)
+  -o, --output     Specify the output format (#{OUTPUT_FORMATS.join(', ')}, default: svg)
   -t, --template   Specify the file that should be used as a template for the output
   -e, --expand     Expand aliases
   -E, --no-expand  Don't expand aliases
@@ -43,11 +43,12 @@ flags:
 
         if value == '--output'
           # next value should be the output format
-          if ['tex', 'svg', 'gif', 'react'].include? args[index+1]
+          if OUTPUT_FORMATS.include? args[index+1]
             options[:output] = args[index+1].split(",")
             skip_next = true
           else
-            puts "invalid option for '--output', supplied '#{args[index+1]}' but was expecting one of 'tex', 'svg', 'gif' or 'react'"
+            outputs = "'" + OUTPUT_FORMATS[0..-2].join("', '") + "' or '" + OUTPUT_FORMATS[-1] + "'"
+            puts "invalid option for '--output', supplied '#{args[index+1]}' but was expecting one of #{outputs}"
             exit 1
           end
         end
@@ -93,11 +94,12 @@ flags:
           end
 
           if flag == 'o'
-            if ['tex', 'svg', 'gif', 'react'].include? args[index+1]
+            if OUTPUT_FORMATS.include? args[index+1]
               options[:output] = args[index+1].split(",")
               skip_next = true
             else
-              puts "invalid option for '-o', supplied '#{args[index+1]}' but was expecting one of 'tex', 'svg', 'gif' or 'react'"
+              outputs = "'" + OUTPUT_FORMATS[0..-2].join("', '") + "' or '" + OUTPUT_FORMATS[-1] + "'"
+              puts "invalid option for '-o', supplied '#{args[index+1]}' but was expecting one of #{outputs}"
               exit 1
             end
           end

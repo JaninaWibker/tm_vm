@@ -37,6 +37,18 @@ def pngs2gif(basedir, inputfiles, outputfile, options)
   system "convert #{flags.join(" ")} 2&>/dev/null"
 end
 
+def tex2pdf(basedir, basename, options)
+  Dir.mktmpdir { |dir|
+    flags = [
+      "-interaction=nonstopmode",
+      "-output-directory=#{dir}",
+      File.join(basedir, basename + '.tex')
+    ]
+    system "pdflatex #{flags.join(" ")} &>/dev/null"
+    File.rename(File.join(dir, basename + '.pdf'), File.join(basedir, basename + '.pdf'))
+   }
+end
+
 def mkdir_if_not_exists(path)
   dirname = File.join(Dir.pwd, path)
   Dir.mkdir dirname unless File.exists?(dirname)
@@ -140,7 +152,8 @@ def output_end(output, tm, options)
     # iteration as it requires all pngs to be present
 
     if sorted_output.include? "pdf"
-      puts "pdf support coming soon" # TODO: add pdf support
+      tex2pdf(basedir, basename, {})
+      puts "written #{basename}.pdf"
     end
 
     if sorted_output.include? "react"

@@ -194,7 +194,7 @@ def parse_options(options)
 
   output_re = Regexp.new TM.assignment(
     'output',
-    '(tex|svg|png|gif|pdf|react)|' + TM.array('(?:tex|svg|png|gif|pdf|react)')
+    "(#{OUTPUT_FORMATS.join('|')})" + TM.array("(?:#{OUTPUT_FORMATS.join('|')})")
   )
 
   duration_re = Regexp.new TM.assignment(

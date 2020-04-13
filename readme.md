@@ -13,7 +13,7 @@ and react component outputs which aren't produced per state change.
 usage: ruby src/main.rb <optional flags> <input file>
 
 flags:
-  -o, --output     Specify the output format (tex, svg, gif, react, default: svg)
+  -o, --output     Specify the output format (tex, svg, png, gif, pdf, react, default: svg)
   -t, --template   Specify the file that should be used as a template for the output
   -e, --expand     Expand aliases
   -E, --no-expand  Don't expand aliases
@@ -21,7 +21,9 @@ flags:
   -v, --version    Print version
 ```
 
-Check out the `input.tm` file for an example of how the tuing machine needs to be specified
+Check out the `input.tm` file for an example of how the turing machine needs to be specified
+
+## Example
 
 Run the example turing machine as follows:
 
