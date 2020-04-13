@@ -2,7 +2,7 @@ def change_symbol(tape, pos, symbol)
   if pos == -1
     return { :tape => [symbol] + tape, :new_pos => pos + 1 }
   elsif pos == tape.size
-    return { :tape => tape + [symbol], :new_pos => pos - 1 }
+    return { :tape => tape + [symbol], :new_pos => pos }
   else
     new_tape = tape.map(&:clone)
     new_tape[pos] = symbol
@@ -14,7 +14,7 @@ def get_symbol(tape, pos)
   if pos == -1 # out of bounds left side (-> blank symbol, expanding tape left side)
     return { :tape => [nil] + tape, :new_pos => pos + 1, :symbol => nil }
   elsif pos == tape.size # out of bounds right side (-> blank symbol, expanding tape right side)
-    return { :tape => tape + [nil], :new_pos => pos - 1, :symbol => nil }
+    return { :tape => tape + [nil], :new_pos => pos,     :symbol => nil }
   else # not ouf of bounds, not adjusting tape
     return { :tape => tape,         :new_pos => pos,     :symbol => tape[pos] }
   end

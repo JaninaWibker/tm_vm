@@ -15,7 +15,7 @@ and react component outputs which aren't produced per state change.
 usage: ruby src/main.rb <optional flags> <input file>
 
 flags:
-  -o, --output     Specify the output format (tex, svg, png, gif, pdf, react, default: svg)
+  -o, --output     Specify the output format (tex, svg, png, gif, pdf, react, custom, default: svg)
   -t, --template   Specify the file that should be used as a template for the output
   -e, --expand     Expand aliases
   -E, --no-expand  Don't expand aliases
@@ -45,6 +45,10 @@ Most output formats have other output formats as a dependency:
 - **react** depends on **tex**
 
 Outputting to gif results in the outputs for tex, svg, png and gif to be generated and similar for all other output formats.
+
+> Outputting to png (and thereby also gif) is a bit slow duo to inkscape having to be launched individually each time.
+
+> the option 'custom' at the moment just prints out the state of the turing machine when each step is executed, it does not generate any output. This state is formatted as a ruby hash. In the future it will be more customizable and flexible and allow things such as executing external programs each step. This option is currently mostly used for debugging output when generating a ton of files is a little too slow.
 
 ## Features
 

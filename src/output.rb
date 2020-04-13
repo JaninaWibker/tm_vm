@@ -95,6 +95,10 @@ def output_stream(output, tm, options, state)
 
   output[:output][state[:step]] = template
 
+  if options[:output].include? 'custom'
+    puts state
+  end
+
   return output
 end
 
@@ -122,8 +126,6 @@ def output_end(output, tm, options)
 
   puts sorted_output.inspect
 
-
-
   basedir = File.join(Dir.pwd, "output")
 
   puts "output folder is: #{basedir}"
@@ -132,8 +134,9 @@ def output_end(output, tm, options)
 
 
   output[:output].each_with_index { |content, index|
-    # next # TODO: remove
     basename = basename_no_index + "-" + index.to_s
+
+    break if options[:debug_no_file_output]
 
     if sorted_output.include? "tex"
       File.write(File.join(basedir, basename + ".tex"), content)

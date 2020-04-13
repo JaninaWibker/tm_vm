@@ -7,7 +7,7 @@ require_relative './generate_template.rb'
 require_relative './run.rb'
 require_relative './output.rb'
 
-OUTPUT_FORMATS = ['tex', 'svg', 'png', 'gif', 'pdf', 'react']
+OUTPUT_FORMATS = ['tex', 'svg', 'png', 'gif', 'pdf', 'react', 'custom']
 
 # TODO: add support for more options (possibly with --internal prefix) like:
 # - font-format
