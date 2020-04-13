@@ -41,9 +41,9 @@ transitions = {
 
 % EXECUTION %
 
-input = ['a', 'b', '0', '1'] # each symbol is provided seperate (tokenizing is not part of this project)
+input = ['a', 'a', 'a', 'a'] # each symbol is provided seperate (tokenizing is not part of this project)
 
-step 6
+step 30 
 
 % OPTIONS %
 
@@ -60,4 +60,4 @@ step 6
 
 expand_aliases = true
 output = svg
-duration = 200
+duration = 500

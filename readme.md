@@ -62,10 +62,11 @@ there are many macros that can be used inside of the tex template file:
 
 Alongside those macros it is also possible to modify how the highlighting of the active state / transition looks
 
-For that simply modify the `highlight` style:
+For that simply modify the `n_highlight` and `e_highlight` styles:
 
 ```latex
-\tikzstyle{highlight}=[draw=blue,text=blue]
+\tikzstyle{n_highlight}=[draw=blue,text=blue]
+\tikzstyle{e_highlight}=[draw=blue,text=blue]
 ```
 
 ## Requirements
